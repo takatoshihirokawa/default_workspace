@@ -128,25 +128,85 @@ description: string   # Short description for card
 
 ---
 
+## Admin Panel (CMS)
+
+Path: `/admin`
+
+### Authentication
+- Supabase Auth + Google OAuth
+- Only the owner's Google account can access
+- Middleware redirects unauthenticated users to `/admin/login`
+
+### Features
+1. **Dashboard** — list of works, quick stats
+2. **Works CRUD** — add / edit / delete works via form UI
+3. **Claude Chat** — chat interface powered by Claude API; natural language commands execute Supabase operations (e.g. "新しいワークを追加して" → form pre-filled or directly inserted)
+4. **Profile editor** — edit About section content
+
+### Claude API Role (admin panel)
+- Endpoint: `POST /api/admin/chat` (Next.js Route Handler, server-side, API key in env)
+- Model: `claude-sonnet-4-6`
+- System prompt: gives Claude access to available tools (create_work, update_work, delete_work, list_works)
+- Tool use: Claude calls tools that execute Supabase mutations
+- Response streamed to chat UI
+
+---
+
+## Supabase Schema
+
+### `works` table
+```sql
+id          uuid primary key default gen_random_uuid()
+slug        text unique not null
+title       text not null
+year        int not null
+tags        text[] not null
+description text not null
+thumbnail   text
+sort_order  int default 0
+created_at  timestamptz default now()
+updated_at  timestamptz default now()
+```
+
+### `contact_submissions` table
+```sql
+id            uuid primary key default gen_random_uuid()
+last_name     text not null
+first_name    text not null
+last_kana     text
+first_kana    text
+email         text not null
+inquiry_type  text not null
+message       text not null
+created_at    timestamptz default now()
+```
+
+---
+
 ## Implementation Phases
 
-### Phase 1 — Frontend (this sprint)
+### Phase 1 — Frontend
 - Project scaffold (Next.js 15 + Tailwind + Framer Motion)
 - Global layout, custom cursor, dark theme
 - Hero section with mouse-tracking animation
-- About, Works (static data), Contact sections
+- About, Works (static data from Supabase or seed), Contact sections
 - Work detail page template
 - Responsive layout
 
-### Phase 2 — Content & Data
-- MDX pipeline (`next-mdx-remote` or `@next/mdx`)
-- Migrate all 6 works to MDX with real content
-- Profile MDX
-- Privacy policy page
+### Phase 2 — Supabase Integration
+- Supabase client setup
+- Works data from `works` table
+- Migrate 6 seed works into Supabase
 
-### Phase 3 — Contact & Deploy
-- Contact form with Resend or Formspree
-- Vercel deployment setup + custom domain
+### Phase 3 — Admin Panel
+- Supabase Auth + Google OAuth
+- `/admin` dashboard, works CRUD UI
+- Claude API chat interface with tool use
+- Profile editor
+
+### Phase 4 — Contact & Deploy
+- Contact form → Supabase `contact_submissions`
+- Vercel deployment + custom domain `takatoshihirokawa.com`
 - Performance / accessibility pass
 
 ---
@@ -155,5 +215,4 @@ description: string   # Short description for card
 
 - Light mode toggle
 - Topics section content (section exists but shows empty state)
-- CMS admin UI
 - Analytics
