@@ -122,7 +122,8 @@ description: string   # Short description for card
 ## Contact Form
 
 - Fields: 姓・名・セイ・メイ、メールアドレス、お問い合わせ種別（dropdown）、内容、プライバシー同意チェックボックス
-- Submission: Vercel serverless function or Resend API (v2 — placeholder in v1)
+- Submission: Supabase (`hirokawa.dev` project) — insert into `contact_submissions` table via Supabase client (Phase 3)
+- Phase 1: static `e.preventDefault()` + thank-you message only
 - SNS links: LINE / Instagram / X(Twitter)
 
 ---
