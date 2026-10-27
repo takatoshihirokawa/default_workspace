@@ -73,13 +73,51 @@
 
 ### 通知の仕組み（LINE）
 
-各ワークフローが Notification を1件作り、続けてLINEに送る。Notification を作るワークフロー:
+Notification を1件作り、続けてLINEに送る。Notification はバックエンドのワークフローとページ内のワークフローの両方で作られている。
 
-- `send_feedback_comment_notification_to_mentor`（学習者→メンター）
-  - 条件: メンターの `notification_types` に feedback_message を含む、`line_id` が空でない、本文あり（画像用・動画用は別アクション）
-  - タイトル例: 「○○さんから「カリキュラム名」にメッセージが届いています。」（50文字を超えることがある）
-- `send_feedback_message_notification_to_learner`（メンター→学習者）
-- `notify_mentors_curriculum_started` / `_video_completed` / `_curriculum_completed`
+#### 通知の種類（`OP_Notification_type`）
+
+| type | 内容 |
+| --- | --- |
+| `feedback_message` | カリキュラムへのコメント（メンター→学習者、学習者→メンターの両方向） |
+| `feed_post_comment` | 自分のフィード投稿へのコメント |
+| `mentee_curriculum_started` | メンティーがカリキュラムを開始 |
+| `mentee_video_completed` | メンティーが動画の視聴を完了 |
+| `mentee_curriculum_completed` | メンティーがカリキュラムを完了 |
+| `curriculum_completed_by_mentor` | メンターがカリキュラムを完了にした |
+
+#### ページごとの通知の発生元
+
+**curriculum_detail（学習者側）**
+
+| 操作 | 呼んでいるもの | 届く相手 |
+| --- | --- | --- |
+| フィードバック送信（テキスト・画像・動画） | `send_feedback_comment_notification_to_mentor` | メンター |
+| カリキュラム開始 | `notify_mentors_curriculum_started` | メンター |
+| カリキュラム完了 | `notify_mentors_curriculum_completed` | メンター |
+| 動画の視聴完了 | `notify_mentors_video_completed` | メンター |
+| 「視聴完了」ボタン | `send_feedback_message_notification_to_learner` | 学習者（※要確認: 学習者が自分の操作の通知を受け取っている可能性） |
+
+**progress_detail（メンター側）**
+
+| 操作 | 呼んでいるもの | 届く相手 |
+| --- | --- | --- |
+| テキストでフィードバック | `send_feedback_message_notification_to_learner` | 学習者 |
+| 画像・動画でフィードバック | `send_feedback_media_notification_to_learner` | 学習者 |
+| メンターが完了にする | ページ内で Notification を直接作成 | 学習者 |
+
+**feed**
+
+| 操作 | 呼んでいるもの | 届く相手 |
+| --- | --- | --- |
+| コメント送信（PC: `create_comment_pc` / スマホ: `create_comment_sp`） | ページ内で Notification を直接作成 | 投稿者 |
+
+#### 補足
+
+- `send_feedback_comment_notification_to_mentor` の条件: メンターの `notification_types` に feedback_message を含む、`line_id` が空でない、本文あり（画像用・動画用は別アクション）
+- タイトル例: 「○○さんから「カリキュラム名」にメッセージが届いています。」（50文字を超えることがある）
+- プッシュ通知はデータトリガー（Notification 作成時）1つで、上記すべての発生元を拾える。既存のワークフローは変更不要
+- 画像・動画のフィードバック（`send_feedback_media_notification_to_learner` など）は本文が空になる可能性が高く、プッシュでは固定文に切り替える分岐が必要
 
 ## 気になる点・リスク
 
@@ -98,8 +136,9 @@
 手順書: 「カミキュラム プッシュ通知の導入手順」（古川さん作成）
 
 - [ ] 通知の範囲を決める
-  - A案: 最初は feedback_message の1種類だけ（データトリガーの Only when に type を追加）
+  - A案: 最初は feedback_message の1種類だけ（データトリガーの Only when に type を追加）。この type は両方向（メンター⇄学習者）を含む
   - B案: 最初から全種類（本文が空の通知に固定文が必要）
+  - 提案: A案で1本届くのを確認してから、type の条件を外して全種類に広げる
 - [ ] Progressier の登録と設定（ドメイン app.kamiculum.com、Start URL `/curriculum_list`）
 - [ ] プラグインの API Key 設定を確認（プラグインは導入済み）
 - [ ] Header に新しいHTML要素を追加（ID `progressier-email-container`、中身は Current User's email）。既存の「HTML A」は見た目用なので書き換えない
