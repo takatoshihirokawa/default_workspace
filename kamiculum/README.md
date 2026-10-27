@@ -135,15 +135,41 @@ Notification を1件作り、続けてLINEに送る。Notification はバック�
 
 手順書: 「カミキュラム プッシュ通知の導入手順」（古川さん作成）
 
-- [ ] 通知の範囲を決める
-  - A案: 最初は feedback_message の1種類だけ（データトリガーの Only when に type を追加）。この type は両方向（メンター⇄学習者）を含む
-  - B案: 最初から全種類（本文が空の通知に固定文が必要）
-  - 提案: A案で1本届くのを確認してから、type の条件を外して全種類に広げる
-- [ ] Progressier の登録と設定（ドメイン app.kamiculum.com、Start URL `/curriculum_list`）
-- [ ] プラグインの API Key 設定を確認（プラグインは導入済み）
+#### 設計方針（2026-10-27 決定）
+
+- 今後の通知の使い分け: ブラウザで使う人は LINE、PWA で使う人はプッシュ
+- **Notification の作成は LINE と切り離す**。LINE連携の有無（`line_id`）やLINE通知のオン・オフに関係なく、通知が発生したら作る
+- **LINE 送信**は今の条件のまま（マイページの通知設定 `notification_types` がオン、かつ `line_id` が空でない）。条件は LINE 送信アクション側に移す
+- **プッシュ送信**はデータトリガーで Notification が作られるたびに送る。PWA で通知を許可していない人には届かないだけ
+- LINE とプッシュの両方が届くのが嫌な人は、マイページで LINE 通知をすべてオフにする（新しい設定は追加しない）
+- `status`（pending / sent / failed）は未使用。本番の Notification 22件はすべて pending のまま（2026-10-27 確認）。今回の変更に影響しない
+
+#### 進め方
+
+**ステップ1: 本番でプッシュが届くか確認（Bubble のワークフロー・ページは変更しない）**
+
+- [ ] Progressier に登録し、カードを登録する
+  - App Name: Kamiculum / Start URL: `https://app.kamiculum.com/curriculum_list`
+  - インストールを促すバナーやボタンはオフ、「Prompt for notifications in the browser」はオフのまま
+- [ ] Bubble の Settings > SEO / metatags の「Script/meta tags in header」にダッシュボードのコードを追記（既存のコードは消さない）
+- [ ] 同じタブの「Hosting files in the root directory」に `progressier.js` をアップロード（ファイル名は変えない）
+- [ ] Plugins で Progressier プラグイン（導入済み）に API Key を入れる
+- [ ] Live にデプロイし、`https://app.kamiculum.com/progressier.js` が開けるか確認
+- [ ] 実機（iPhone: Safari / Android: Chrome）でホーム画面に追加し、通知を許可
+- [ ] Progressier のダッシュボードの Push Composer からテスト通知を送り、届くか確認
+
+**ステップ2: ブランチを作って実装（届いた場合）**
+
 - [ ] Header に新しいHTML要素を追加（ID `progressier-email-container`、中身は Current User's email）。既存の「HTML A」は見た目用なので書き換えない
-- [ ] データトリガー `send_push_on_notification` を作成
-- [ ] ライブにデプロイして実機で確認
+- [ ] データトリガー `send_push_on_notification` を作成（Notification 作成時のみ。本文が空のときは固定文）
+- [ ] Notification の作成条件から `line_id` と LINE通知設定を外し、LINE 送信アクション側の条件に移す（9か所）
+  - バックエンド: `send_feedback_comment_notification_to_mentor`、`send_feedback_message_notification_to_learner`、`send_feedback_media_notification_to_learner`、`notify_mentors_curriculum_started` / `_video_completed` / `_curriculum_completed`
+  - ページ: progress_detail の完了ボタン、feed のコメント送信（PC用・スマホ用）
+- [ ] Main にマージして Live にデプロイ
+- [ ] 実機で確認
+  - LINE 連携済みのアカウント: LINE とプッシュの両方が届く
+  - LINE 未連携のアカウント: プッシュだけ届く
+  - タップで該当ページが開く
 
 ### セキュリティ
 
