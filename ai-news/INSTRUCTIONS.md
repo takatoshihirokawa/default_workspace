@@ -39,7 +39,7 @@ curl -sS "https://personal-notes-khaki.vercel.app/api/agent/ai-news?days=7"
 
 ## 2. 前回の反応を読み、好みのメモを更新する
 
-1. `slack_search_channels` で `ai-news` チャンネルの ID を調べる
+1. 配信先はワークスペース「Hirokawa」の `#ai_news`（チャンネル ID：`C0CF9HW549W`）。読み書きはこの ID で行う
 2. `slack_read_channel`（`response_format: detailed`、`oldest` は 5日前）で、「📰 AIニュース」で始まる親メッセージのうち、まだ反映していないもの（直近の 1〜2 回分）を探す
 3. 親メッセージごとに `slack_read_thread`（`detailed`）でスレッドを読む
    - `#1 ` のように番号で始まる返信 ＝ ニュース1件。付いているリアクションを読む
@@ -139,7 +139,7 @@ JSON は手で書かず、`python3 -c 'import json,sys; ...'` などで作る（
 
 ## 6. Slack に投稿する
 
-1. 親メッセージを `#ai-news` に投稿する（`slack_send_message`）
+1. 親メッセージを `#ai_news`（`C0CF9HW549W`）に投稿する（`slack_send_message`）
 
 ```
 📰 AIニュース 11/4（水）  対象：11/3（火）
