@@ -8,6 +8,8 @@
 | --- | --- |
 | `kamiculum/` | Kamiculum（Bubble: `mendokusai`）の仕様・データ設計・TODO |
 | `shared/` | アプリ横断の共通メモ（API連携、Bubbleの小技など） |
+| `ai-news/` | 平日の朝に Slack へ届く「AIニュース朝刊」の指示書と情報源の一覧 |
+| `docs/` | 設計書 |
 
 アプリを追加するときは、アプリ名のフォルダを作って同じ形式で管理する。
 
