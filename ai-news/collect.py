@@ -39,6 +39,11 @@ FEEDS = [
     ("The Verge AI", "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "メディア"),
     ("Ars Technica AI", "https://arstechnica.com/ai/feed/", "メディア"),
     ("ITmedia AI+", "https://rss.itmedia.co.jp/rss/2.0/aiplus.xml", "日本"),
+    # AIツールの新機能（更新情報）。新機能は漏らさず載せるため
+    ("Gemini（Google）", "https://blog.google/products/gemini/rss/", "新機能"),
+    ("Google Labs（NotebookLM など）", "https://blog.google/technology/google-labs/rss/", "新機能"),
+    ("GitHub の更新情報（Copilot など）", "https://github.blog/changelog/feed/", "新機能"),
+    ("Cursor の更新情報", "https://cursor.com/changelog/rss.xml", "新機能"),
 ]
 
 # Hacker News で拾う語（ポイントの高いものだけ）
