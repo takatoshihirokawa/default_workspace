@@ -13,7 +13,7 @@ Claude Code・Claude・ChatGPT・Gemini・Codex が共通で使う外部メモ�
 | データベース「作業ログ」 | https://www.notion.so/d5567d242dd445d4b08ed4316f0b4e4f |
 | 作業ログのデータソース | `collection://29667c75-313d-4220-bdf9-743a8b112333` |
 
-Notionのツール（`mcp__Notion__*`）が見当たらなければ、ToolSearch で `notion` を探して読み込む。
+Notionのツール（`mcp__Notion__*`）が見当たらなければ、ToolSearch で `notion` を探して読み込む。ツール名が違う環境（claude.ai のチャットなど）では、同じ役割のNotionツール（ページ作成・データベース検索）を使う。それでもNotionにつながらなければ、記録する内容をそのまま表示し、「Notionに接続できなかったので手で貼ってください」と伝える。
 
 ## 記録する（書く）
 
