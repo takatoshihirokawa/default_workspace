@@ -30,6 +30,7 @@ Notionのツール（`mcp__Notion__*`）が見当たらなければ、ToolSearch
    | タイトル | 何をしたかが一目でわかる一文 |
    | 日付 | 作業した日（`TZ=Asia/Tokyo date +%F`） |
    | 対象 | Kamiculum / Hanashiru / Salonwriter / SalonAdapter Lite / HotPepper Auto Post / Joule Works / AIニュース朝刊 / AI環境・仕組み / その他 |
+   | リポジトリ | 作業したGitHubリポジトリ名（例：`default_workspace`）。チャットでの作業は `なし（チャット）`。選択肢にないリポジトリは空欄にして要約に名前を書く |
    | 種類 | 成果（作った・直した）／決定（方針を決めた）／学び（次に活かすこと）／課題（残った宿題） |
    | 要約 | 3行程度。①結果 ②なぜそうしたか ③次にやること |
    | 記録したAI | `Claude Code` |
@@ -43,6 +44,7 @@ Notionのツール（`mcp__Notion__*`）が見当たらなければ、ToolSearch
      "date:日付:start": "2026-11-05",
      "date:日付:is_datetime": 0,
      "対象": "AIニュース朝刊",
+     "リポジトリ": "default_workspace",
      "種類": "成果",
      "要約": "配信をボット「AI News」から投稿するよう指示書を変更した。本人名義の投稿と見分けるため。次はスレッドでの質問対応の動作確認。",
      "記録したAI": "Claude Code",
@@ -60,7 +62,7 @@ Notionのツール（`mcp__Notion__*`）が見当たらなければ、ToolSearch
 
 作業を始めるときや「前に何を決めたっけ」と言われたときに使う。
 
-1. まず `mcp__Notion__notion-query-data-sources` で、対象（アプリ名・テーマ）を絞り込んで新しい順に読む。
+1. まず `mcp__Notion__notion-query-data-sources` で、「リポジトリ」（今いるリポジトリ名）か「対象」（アプリ名・テーマ）を絞り込んで新しい順に読む。下の例の `"対象"`／`"Kamiculum"` を `"リポジトリ"`／リポジトリ名に替えればリポジトリで絞り込める。
 
    ```json
    {"data": {"mode": "rows",
