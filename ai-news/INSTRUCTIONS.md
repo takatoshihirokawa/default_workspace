@@ -184,6 +184,51 @@ python3 ai-news/collect.py            # 試し実行で配信日の指定があ�
 
 ---
 
+## 6.5 Threads 用の素材を1件渡す
+
+個人の Threads アカウント（takatoshihirokawa/hirokawa-threads）で、毎朝1本 AI ニュースを投稿している。投稿文は向こうがルールと口調で書くので、こちらは**素材**を1件渡すだけ。
+
+1. **今日の10件（とその他の見出し）から1件選ぶ**。選ぶ基準：
+   - 幅広い人が見て「ああそうなんだ、情報としてありがたい」と思えるもの
+   - ふだんの生活や仕事に響く「こういうアプリ・機能があるよ」という話（例：スマホのアプリの新機能、無料で使えるようになった、写真や文章が楽に作れるようになった）
+   - 業界の話（資金調達・買収・人事・規制・技術寄りの話）や、開発者向けの話は選ばない
+   - 日中の「⚡ 速報」ですでに Threads に渡したもの（Slack の速報と同じ話題）は選ばない
+   - **向くものが無い日は渡さない**（無理に選ばない）
+2. 素材を JSON にして、Nochon の入り口に送る（`python3` の `json.dump(..., ensure_ascii=False)` で `/tmp/material.json` に `{"material": {...}}` を作る）
+
+```bash
+curl -sS -X POST "https://personal-notes-khaki.vercel.app/api/agent/threads-material" \
+  -H "Content-Type: application/json" --data-binary @/tmp/material.json
+# → {"ok":true,"path":"materials/ai-news/2026-11-06-morning.json",...}
+```
+
+素材の形（項目名はこのとおり。推測は入れず、記事に書いてあることだけで具体的に書く。分からない項目は省く）：
+
+```json
+{"material": {
+  "id": "2026-11-06-morning",            // <配信日>-morning
+  "kind": "morning",
+  "date": "2026-11-06",                  // 配信日（日本時間）
+  "created_at": "2026-11-06T09:15:00+09:00",
+  "title": "見出し",
+  "who": "発表した会社・サービス",
+  "what": "何が発表されたか（要点）",
+  "when": "いつから",
+  "who_can_use": "誰が使えるか（プラン・地域など）",
+  "use_cases": ["ふだんの使い道", "…"],
+  "impact": "ふつうに働いている人にとっての意味",
+  "source_url": "原文（一次情報）",
+  "slack_url": "https://hirokawa-corp.slack.com/archives/C0CF9HW549W/p<そのカードの ts から . を除いたもの>?thread_ts=<parent_ts>",
+  "picked_reason": "選んだ理由"
+}}
+```
+
+- カードの ts は、手順 6 のスクリプトの出力 `item_ts` にある（番号ごと）
+- 送るのは1日1件だけ。`skipped`（同じ素材がすでにある）が返ったら、それ以上は送らない
+- 失敗しても、配信そのものはやり直さない。最後の報告に「Threads の素材を渡せなかった」と理由を書く
+
+---
+
 ## 7. Nochon に保存する
 
 1. **その日のページ**：Slack に投稿した内容（親メッセージ＋全件）を Markdown で保存する。末尾に「Slack の投稿：<リンク>」を付ける
