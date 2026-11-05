@@ -92,6 +92,12 @@ Routine（平日 8:52 JST、毎回新しいセッション）
 - ボット「AI News」が `#ai_news` に「⚡ 速報」のカードで流す。翌朝の配信は速報済みの話題をカードにせず、1行で触れる
 - 22時〜翌8時の分は流さず、翌朝の配信に回る
 
+## 個人 Threads への素材（11/5 追加）
+
+- 毎朝の配信のあと、10件から「幅広い人が情報としてありがたいと思える、生活に響くアプリ・機能の話」を1件選び、素材を Nochon の `/api/agent/threads-material` に送る。Nochon が takatoshihirokawa/hirokawa-threads の `materials/ai-news/<日付>-morning.json` に置く
+- 速報も、Threads 向きなら1回につき1件、`<日付>-breaking-<HHMM>.json` として置く
+- 投稿文は hirokawa-threads 側がルールと口調で書いて投稿する（確認なし、1日2本まで、原文 URL は付けない）。素材の形式は hirokawa-threads の作業ルール 7-7
+
 ## 失敗した時
 
 | 状況 | 対応 |
