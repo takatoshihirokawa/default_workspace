@@ -53,13 +53,25 @@ Notionのツール（`mcp__Notion__*`）が見当たらなければ、ToolSearch
    ※ 「リンク」に `userDefined:` は付けない（付けるとエラーになる）。
 
 3. 本文は基本的に空でよい。詳しい経緯を残したいときだけ箇条書きで書く。
-4. パスワード・APIキー・個人情報は書かない。
+4. パスワード・APIキー・個人情報は書かない。要約に `CLAUDE.md` のような「.」入りのファイル名を書くと、Notionが勝手にリンクにしてしまうので、「作業ルール」など言葉で言い換える。
 5. 書いたら、ユーザーに「作業ログに1件残しました」とタイトルとリンクを伝える。
 
 ## 読み返す（参照）
 
 作業を始めるときや「前に何を決めたっけ」と言われたときに使う。
 
-1. `mcp__Notion__notion-search` に `data_source_url: "collection://29667c75-313d-4220-bdf9-743a8b112333"` とキーワード（アプリ名・テーマ）を渡して探す。
+1. まず `mcp__Notion__notion-query-data-sources` で、対象（アプリ名・テーマ）を絞り込んで新しい順に読む。
+
+   ```json
+   {"data": {"mode": "rows",
+     "data_source_url": "collection://29667c75-313d-4220-bdf9-743a8b112333",
+     "filter": {"type": "group", "operator": "and", "filters": [
+       {"type": "property", "property": "対象", "propertyType": "select",
+        "operator": "enum_is", "value": {"type": "exact", "value": "Kamiculum"}}]},
+     "sort": [{"property": "日付", "direction": "descending"}],
+     "limit": 20}}
+   ```
+
+   対象をまたいでキーワードで探したいときは、`mcp__Notion__notion-search` に `data_source_url` とキーワードを渡す（作ったばかりの記録は検索に出ないことがある）。
 2. 特に「決定」と「課題」は、過去の方針や積み残しなので必ず目を通す。
 3. 見つかった記録と矛盾することをする場合は、先にユーザーに確認する。
