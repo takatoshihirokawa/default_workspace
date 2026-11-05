@@ -83,6 +83,15 @@ Routine（平日 8:52 JST、毎回新しいセッション）
 - `PUT {page:"preferences"|"trends", content}`：書き換え
 - `PUT {page:"daily", date, content}`：その日のページを保存（同じ日付は上書き）
 
+## 速報（11/5 追加）
+
+- 日本時間 8〜21時台の毎時5分に、GitHub Actions（`.github/workflows/ai-news-breaking.yml`）が `ai-news/breaking.py` を動かす
+- 各社のフィード・Anthropic のニュース一覧・Claude Code の新しい版から候補を集め、Nochon の `/api/agent/ai-news-breaking` に送る
+- Nochon は「速報の記録」にない記事のうち、時刻の分かるものは90分以内・日付だけのものは今日の分に絞り、Claude（Sonnet 5.5）で判断する
+- 速報にするのは「主要なAIツールの新モデル・大きな新機能」と「大きな業界ニュース」だけ（1回最大3件、迷ったら載せない）
+- ボット「AI News」が `#ai_news` に「⚡ 速報」のカードで流す。翌朝の配信は速報済みの話題をカードにせず、1行で触れる
+- 22時〜翌8時の分は流さず、翌朝の配信に回る
+
 ## 失敗した時
 
 | 状況 | 対応 |
