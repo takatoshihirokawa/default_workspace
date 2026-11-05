@@ -8,6 +8,7 @@
 | --- | --- |
 | `kamiculum/` | Kamiculum（Bubble: `mendokusai`）の仕様・データ設計・TODO |
 | `shared/` | アプリ横断の共通メモ（API連携、Bubbleの小技など） |
+| `weekly-review/` | 毎週金曜の夕方に作業ログを読み返し、AIのルールの改善案を Notion にまとめる「週次ふりかえり」の指示書 |
 | `ai-news/` | 平日の朝に Slack へ届く「AIニュース朝刊」の指示書と情報源の一覧 |
 | `docs/` | 設計書 |
 | `.claude/skills/notion-memory/` | 作業の最終結果を Notion「AI共通メモリ」の作業ログに記録・参照する手順 |
