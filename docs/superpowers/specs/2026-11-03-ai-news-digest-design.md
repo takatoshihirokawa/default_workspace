@@ -85,7 +85,7 @@ Routine（平日 8:52 JST、毎回新しいセッション）
 
 ## 速報（11/5 追加）
 
-- 日本時間 8〜21時台の毎時5分に、GitHub Actions（`.github/workflows/ai-news-breaking.yml`）が `ai-news/breaking.py` を動かす
+- 日本時間 8〜21時台の毎時5分に、外部タイマー（cron-job.org）が GitHub Actions（`.github/workflows/ai-news-breaking.yml`）を起動し、`ai-news/breaking.py` を動かす（11/6 変更：GitHub の定期実行はほとんど動かなかったため）
 - 各社のフィード・Anthropic のニュース一覧・Claude Code の新しい版から候補を集め、Nochon の `/api/agent/ai-news-breaking` に送る
 - Nochon は「速報の記録」にない記事のうち、時刻の分かるものは90分以内・日付だけのものは今日の分に絞り、Claude（Sonnet 5.5）で判断する
 - 速報にするのは「主要なAIツールの新モデル・大きな新機能」と「大きな業界ニュース」だけ（1回最大3件、迷ったら載せない）
