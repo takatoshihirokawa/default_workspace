@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""AIニュースの速報：最新の候補を集めて Nochon に送る（1時間おきに GitHub Actions から動く）。
+"""AIニュースの速報：最新の候補を集めて Nochon に送る（1時間おきに cron-job.org が GitHub Actions を起動して動く）。
 
 Nochon（/api/agent/ai-news-breaking）が、新しい記事だけを選び、Claude で速報にするものを判断して、
 ボット「AI News」として Slack の #ai_news に流す。ここでは候補を集めて送るだけ。

@@ -1,11 +1,12 @@
 # AIニュースの速報：日本時間 8〜21時台の毎時5分に、最新の候補を集めて Nochon に送る。
+# 起動は外部タイマー（cron-job.org）から（hirokawa-threads・sale 系の bot と同じ形）。
+# GitHub の定期実行（schedule）は混雑で遅れたり飛ばされたりして、11/5〜11/6 はほとんど動かなかったので使わない。
+# 22時〜翌8時に起動されても、breaking.py が何もせずに終わる。
 # Nochon が新しい記事だけを Claude で判断し、速報になるものを Slack の #ai_news に流す。
 # 必要なシークレット：NOCHON_AGENT_TOKEN（Nochon の Vercel の環境変数と同じ値）
 name: AIニュース速報
 
 on:
-  schedule:
-    - cron: "5 23,0-12 * * *" # UTC。日本時間の 8:05〜21:05
   workflow_dispatch: {}
 
 permissions:
